@@ -191,6 +191,8 @@ function interseccao(md1, md2) {
 
 function raio(circurferencia, pixel1){
     let raio;
+    let num1;
+    let num2;
 
     let pointY = {
         x: 0,
@@ -199,8 +201,6 @@ function raio(circurferencia, pixel1){
 
     pointY.x = pixel1.x - circurferencia.centro.x;
     pointY.y = pixel1.y - circurferencia.centro.y;
-    let num1;
-    let num2;
     num1 = pointY.x * pointY.x;
     num2 = pointY.y * pointY.y;
 
@@ -319,7 +319,6 @@ let circurferenciaInicial = {
     },
     raio:   0,
 }
-
 
 function draw(){ 
     var inX1;
