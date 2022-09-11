@@ -2,7 +2,7 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 var width = window.innerWidth - 600;
 var height = window.innerHeight;
-var scale = 15;
+var scale = 10;
 
 canvas.width = width;
 canvas.height = height;
@@ -45,13 +45,9 @@ function drawYAxis(){   //draw axis Y
     ctx.stroke();
 }
 
-function drawLine(){   //draw axis Y
-    ctx.beginPath();
-    ctx.moveTo(height, 0);
-    ctx.lineTo(width, pixelOrigin.x);
-    ctx.strokeStyle = axiColor;
-    ctx.lineWidth = 3;
-    ctx.stroke();
+function myFunc(a) {
+    console.log(a.m);
+    console.log(a.k );
 }
 
 function drawGrid(){ //draw square grid X, Y coordinates
@@ -67,7 +63,7 @@ function drawGrid(){ //draw square grid X, Y coordinates
         ctx.beginPath();
         ctx.moveTo(px, 0);
         ctx.lineTo(px, height);
-        ctx.lineWidth = 0.40;
+        ctx.lineWidth = 0.50;
         ctx.stroke();
         if(x !== 0 && x % 2 === 0) {
             ctx.fillText(x.toString(), px, pixelOrigin.y);
@@ -79,7 +75,7 @@ function drawGrid(){ //draw square grid X, Y coordinates
         ctx.beginPath();
         ctx.moveTo(0, py);
         ctx.lineTo(width, py);
-        ctx.lineWidth = 0.40;
+        ctx.lineWidth = 0.50;
         ctx.stroke();
         if (y !== 0 && y % 2 === 0) {
             ctx.fillText((-y).toString(), pixelOrigin.x, py);
@@ -129,13 +125,6 @@ canvas.onwheel = function (event) {
         drag_1 = false;
     };
 }
-//
-
-// function pontoMedio(a, b){
-//     pixelOrigin.x = a;
-//     pixel.y = b;
-// }
-
 function pontoMedio(pixel1, pixel2){
     let pixelX = {
         x: 0,
@@ -157,7 +146,7 @@ function CriarNovaReta(pixel1, pixel2){
 
     reta2.m = (pixel1.y - pixel2.y) / (pixel1.x - pixel2.x);
     reta2.k = pixel1.y - (reta2.m * pixel1.x);
-    console.log("X", reta2.m, reta2.k);
+    //console.log("X", reta2.m, reta2.k);
     return reta2;
 }
 
@@ -175,6 +164,8 @@ function perpenducular(reta, pixel1){
 }
 
 function novoPonto(reta, value){
+    myFunc(reta);
+    
     let pontoX = {
         x: 0,
         y: 0,
@@ -220,24 +211,6 @@ function raio(circurferencia, pixel1){
 }
 
 
-let pixel1 = {
-    x: -12,
-    y: -9,
-};
-
-let pixel2 = {
-    x: 15,
-    y: 15,
-};
-
-let reta3 = {
-    m: 0,
-    k: 0,
-};
-let reta = {
-    m: 17,
-    k: 20,
-};
 function segment(reta, pixel1, pixel2) {
     
     let rp = {
@@ -260,9 +233,8 @@ function segment(reta, pixel1, pixel2) {
     ctx.stroke();
 }
 
-function drawCircle(i){ // pontos definidos com pixelOrigin.x(ou y) + scale * (ponto da coordanada X ou Y);
-    
-    
+function drawCircle(i, pixel1, pixel2, reta){ // pontos definidos com pixelOrigin.x(ou y) + scale * (ponto da coordanada X ou Y);
+    //myFunc(reta);
 
     let pixel3 = {
         x: 0,
@@ -289,8 +261,6 @@ function drawCircle(i){ // pontos definidos com pixelOrigin.x(ou y) + scale * (p
     let value = i;
     
     pixel3 = novoPonto(reta, value);
-    // console.log(pixel3.x);
-    // console.log(pixel3.y);
 
     let pixel4 = {
         x: 0,
@@ -299,34 +269,18 @@ function drawCircle(i){ // pontos definidos com pixelOrigin.x(ou y) + scale * (p
     
     pixel4 = pontoMedio(pixel1, pixel3);
 
-    // console.log("ponto4Medio.x: ", pixel4.x);
-    // console.log("ponto4Medio.y: ", pixel4.y);
 
     md1 = perpenducular(CriarNovaReta(pixel1, pixel2), pontoMedio(pixel1, pixel2));
     md2 = perpenducular(CriarNovaReta(pixel1, pixel3), pontoMedio(pixel1, pixel3));
 
-    // console.log("Md1.m: ", md1.m);
-    // console.log("Md1.k: ", md1.k);
-
-    // console.log("Md2.m: ", md2.m);
-    // console.log("Md2.k: ",md2.k);
-
-    
     circurferencia.centro = interseccao(md1, md2);
     circurferencia.raio = raio(circurferencia, pixel1);
     
     let x = pixelOrigin.x + scale * 2;
     let y = pixelOrigin.y + scale * -2;
 
-
-    // console.log(Number(circurferencia.centro.x));
-    // console.log(circurferencia.centro.y);
-    // console.log(circurferencia.raio);
-    
     ctx.beginPath();
     ctx.arc(pixelOrigin.x + scale * circurferencia.centro.x, pixelOrigin.x + scale * -circurferencia.centro.y, circurferencia.raio, 0, Math.PI*2); 
-    // ctx.moveTo(pixelOrigin.x + scale * circurferencia.centro.x, pixelOrigin.y + scale * -circurferencia.centro.y);
-    // ctx.lineTo(pixelOrigin.x + scale + md1.k, pixelOrigin.y + scale + md1.m);
     ctx.lineWidth = 2%scale;
     ctx.stroke();
 
@@ -334,10 +288,48 @@ function drawCircle(i){ // pontos definidos com pixelOrigin.x(ou y) + scale * (p
     ctx.lineWidth = scale;
     ctx.strokeStyle = "#FF0000";
     ctx.stroke();
+    
+    
+    if(i == -0.9){
+        circurferenciaInicial = circurferencia;
+    }
+    if(i >= 599.8000000000678){
+        circurferenciaFinal = circurferencia;
+        console.log("circurferenciaFinal: " + circurferencia.raio);
+        
+        ctx.beginPath();
+        ctx.lineWidth = 2%scale;
+        ctx.strokeStyle = "#FF0000";
+        // ctx.moveTo(pixelOrigin.x + scale * circurferenciaInicial.centro.x, pixelOrigin.y + scale * circurferenciaInicial.centro.y);
+        // ctx.lineTo(pixelOrigin.x + scale * circurferenciaFinal.centro.x, pixelOrigin.y + scale * circurferenciaFinal.centro.y);
+        ctx.stroke();
+    }
+}
+
+let circurferenciaFinal = {
+    centro: {
+        x: 0,
+        y: 0,
+    },
+    raio:   0,
+}
+let circurferenciaInicial = {
+    centro: {
+        x: 0,
+        y: 0,
+    },
+    raio:   0,
 }
 
 
-function draw(){    
+function draw(){ 
+    var inX1;
+    var inY1;
+    var inX2;
+    var inY2;
+    var retasecM;
+    var retasecN;   
+
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, width, height);
     
@@ -345,12 +337,48 @@ function draw(){
     drawXAxis();
     drawYAxis();
     drawGrid();
-    drawLine();
+    //drawLine();
+
+    let inputX1 = document.querySelector("#x1");
+    let inputY1 = document.querySelector("#y");
+    let inputX2 = document.querySelector("#x2");
+    let inputY2 = document.querySelector("#y2");
+    let retaM = document.querySelector("#m");
+    let retaN = document.querySelector("#n");
+    
+    inX1 = Number(inputX1.value);
+    console.log("inX1: ", inX1);
+    inY1 = Number(inputY1.value);
+    inX2 = Number(inputX2.value);
+    inY2 = Number(inputY2.value);
+    retasecM = Number(retaM.value);
+    retasecN = Number(retaN.value);
+
+    let pixel1 = {
+        x: inX1,
+        y: inY1,
+    };
+
+    let pixel2 = {
+        x: inX2,
+        y: inY2,
+    };
+    
+    let reta = {
+        m: retasecM,
+        k: retasecN,
+    };
+    
+    myFunc(reta);
+    
+    
 
     //test
-
+    var i;
+    //599.9
     for(i = -0.9; i < 599.9; i += 0.1){
-        drawCircle(i);
+        drawCircle(i, pixel1, pixel2, reta);
+        //console.log(pixel1);
     }
 
     //segment(reta, pixel1);
@@ -358,9 +386,11 @@ function draw(){
 
 
 
+
 if(canvas.getContext){
+    // const btn = document.querySelector('#submit');    
+    // btn.addEventListener("click", draw());
     draw();
-    requestAnimationFrame(drawScreen);
 
 } else{
     console.log('Canvas is not available for this browser');
