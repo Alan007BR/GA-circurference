@@ -146,7 +146,6 @@ function CriarNovaReta(pixel1, pixel2){
 
     reta2.m = (pixel1.y - pixel2.y) / (pixel1.x - pixel2.x);
     reta2.k = pixel1.y - (reta2.m * pixel1.x);
-    //console.log("X", reta2.m, reta2.k);
     return reta2;
 }
 
